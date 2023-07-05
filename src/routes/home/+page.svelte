@@ -29,10 +29,10 @@
     <div class="w-1/2 ml-20 pt-5 text-2xl  ">
  <p>"Welcome to my home! I create stunning web experiences, combining elegant design with cutting-edge technology to make your online presence shine."</p>
     </div>
+<div class="flex rounded-full gap-8 justify-center absolute bottom-14 w-full text-white text-3xl">
+   <a href="https://www.behance.net/prajjwalshrimal"> <i class="fa-brands fa-behance text-3xl"></i></a>
+    <a href="https://www.linkedin.com/in/prajjwal-shrimal/"><i class="fa fa-linkedin text-3xl "></i></a>
+    <a href="https://github.com/Prajjwal-08"><i class="fa fa-github text-3xl"></i></a>
+    <a href="https://www.instagram.com/_.prajju08._/"><i class="fa fa-instagram text-3xl "></i></a>
 </div>
-<div class="flex rounded-full gap-8 justify-center absolute bottom-14 w-full text-white text-2xl">
-    <i class="fa-brands fa-behance text-2xl"></i>
-    <i class="fa fa-linkedin text-2xl "></i>
-    <i class="fa fa-github text-2xl"></i>
-    <i class="fa fa-instagram text-2xl "></i>
 </div>
