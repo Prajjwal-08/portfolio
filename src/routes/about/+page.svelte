@@ -2,24 +2,23 @@
     import Navbar from "$lib/components/navbar.svelte"
 </script>
 <Navbar/>
-<div class="  flex w-full pt-20">
-    <div class="left pt-14 pl-6 w-[55%] ">
-        <h2 class="text-5xl font-medium bg-bglr text-transparent bg-clip-text text-white">Who I am ?</h2>
-        <h1 class="text-6xl font-medium text-white my-4 w-full">Prajjwal Shrimal a <span id="desegnation" class="message"><div class="word1">Developer</div><div class="word2">Designer</div>
+<div class="  flex w-full pt-12">
+    <div class="left pt-14 pl-8 w-[60%] ">
+        <h2 class="text-3xl font-medium bg-bglr text-transparent bg-clip-text text-white">Who I am ?</h2>
+        <h1 class="text-4xl font-medium text-white my-4 w-full">Prajjwal Shrimal a <span id="desegnation" class="message"><div class="word1 ">Developer</div><div class="word2">Designer</div>
         </span></h1>
         <p class="text-base mt-8 text-white pr-14">I'm Prajjwal Shrimal, a passionate web developer with expertise in HTML, CSS, and JavaScript. I thrive on solving complex problems and creating user-friendly web experiences.
             With a strong foundation in web development, I constantly stay updated with the latest industry trends and technologies. I enjoy collaborating with diverse teams, exchanging ideas, and learning from others.
             My goal as a web developer is to create clean and efficient code that not only meets technical standards but also resonates with users on a deeper level. I believe in making the web a better place, one project at a time.
             If you're seeking a dedicated, creative, and reliable web developer, I would love to connect and discuss how we can bring your ideas to life. Let's work together to create something amazing!
             </p>
-            <button type="button" class="button mt-20  tracking-wide">
-                <span class="button__text">Download CV</span>
-                <span class="button__icon"><svg class="svg" data-name="Layer 2" id="bdd05811-e15d-428c-bb53-8661459f9307" viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg"><path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path><path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path><path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path></svg></span>
-              </button>
-            
+            <a href="cv.pdf" class="button mt-12  tracking-wide"  download>
+              <span class="button__text" >Download CV</span>
+              <span class="button__icon"><svg class="svg" data-name="Layer 2" id="bdd05811-e15d-428c-bb53-8661459f9307" viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg"><path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path><path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path><path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path></svg></span>
+            </a>
         </div>
-    <div class=" w-[30%] sm:block  flex ">
-        <img src="bgh.png" alt="All icons" class="sm:block relative">
+    <div class="w-[30%] right-0 sm:block flex">
+        <img src="bgh.png" alt="All icons" class="sm:block relative h-[500px]">
     </div>
 </div>
 <div class="mt-12 px-10 text-white">
@@ -157,9 +156,9 @@
 h1 {
   color: #ffffff;
   font-family: tahoma;
-  font-size: 3rem;
+  font-size: 2.75rem;
   font-weight: 70;
-  line-height: 1.5;
+  line-height: 1.6;
   text-transform: uppercase;
   /* white-space: nowrap; */
   overflow: hidden;
@@ -176,14 +175,16 @@ h1 {
   font-weight: 900;
   overflow: hidden;
   position: absolute;
-  padding-left: 0.5rem;
   top: 0.2rem;
-  left: 500px;
+  left: 440px;
   animation: openclose 5s ease-in-out infinite;
 }
 
 .word1, .word2 {
   font-family: tahoma;
+  background: -webkit-linear-gradient(#eee, #333);
+  /* -webkit-background-clip: text; */
+  -webkit-text-fill-color: transparent;
 }
 
 @keyframes openclose {

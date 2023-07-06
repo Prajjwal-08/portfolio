@@ -2,16 +2,16 @@
     import Navbar from "$lib/components/navbar.svelte"
 </script>
 <Navbar/>
-<div class=" bg-slate-900 h-full">
+<div class=" bg-slate-900 h-screen">
     <div class="flex justify-center pt-20">
         <img class="" src="png 23.png" alt="">
     </div>
     <p class="text-white flex justify-center mt-10">Optimism is an occupational hazard of programming:feedback is treatment</p>
     <div class="flex">
-            <div class="mt-14 ml-20 w-50 h-50 ">
-                <img src="contact.png" alt=""> 
+            <div class="mt-8 ml-20 w-96 h-96">
+                <img src="contact.png" alt="" class=""> 
             </div>
-        <div class="w-80 mt-28 ml-80">  
+        <div class="w-80 mt-10 ml-40">  
             <form class="flex flex-col gap-20">
                 <div class="flex flex-col gap-2">
                         <label class="block text-gray-200 font-bold text-xs" for="input1">Your Name</label>
