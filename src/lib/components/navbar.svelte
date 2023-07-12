@@ -3,7 +3,7 @@
       <img src="Group 17.png" alt="" class="w-[30%]">
       <a href="/" class="text-white text-2xl font-semibold absolute pl-10 pt-5">PS</a>
     </div>
-    <div class="center flex items-center gap-7 text-white font-medium lg:hidden sm:block">
+    <div class="center flex items-center gap-7 text-white font-medium ">
       <li class="relative list-none mx-3 pb-1">
         <a href="/" class="w-fit before:bg-bglr before:content-[''] before:absolute before:w-full before:h-[2px] before:rounded-full before:bottom-0 before:left-0 before:bg-black before:hover:scale-x-100 before:scale-x-0 before:origin-top-left before:transition before:ease-in-out before:duration-300">Home</a>
       </li>
