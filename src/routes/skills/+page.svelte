@@ -4,28 +4,27 @@
 
 <Navbar />
 
-<div class="text-white ">
+<div class="text-white w-[1000px] max-w-full ">
    <div class="text-5xl flex gap-3 pt-20 px-20">
       <p class="">
          Technical
          <span class="text-teal-300">Skills</span>
       </p>
    </div>
-   <div class="">
-   <img src="learn.png" alt=" " class="absolute right-24 w-[380px] md:w-[300px] sm:w-60  sm:block" /></div>
-   <div class=" pl-20 pt-4 flex">
-      <p class="xl w-1/2">
+   <div class=" pl-20 pt-4 grid grid-cols-2 sm:grid-cols-1 w-full absolute">
+      <p class="text-2xl md:text-xl md:w-[70%] lg:w-[60%] ">
          I possess a diverse set of technical skills that enable me to tackle
          complex challenges with ease. From developing innovative solutions to
          analyzing data and optimizing processes, I bring a versatile and
          adaptable approach. My expertise lies in leveraging technology to drive
          efficiency, enhance user experiences, and achieve business objectives.
       </p>
+     
+      <img src="learn.png" alt=" " class="hidden sm:block lg:top-12 md:right-0 lg:absolute md:mt-10  max-w-1/2 xl:w-max  w-80 lg:right-10 sm:top-40 " />
    </div>
-
-   <div class="">
-      <div class="flex gap-14 pl-20 pt-14 text-center">
-         <div class="w-24">
+       <div class="lg:w-[50rem]  lg:mt-[10rem] md:mt-[40rem] sm:mt-[40rem] max-sm:ml-52">
+      <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 pl-20 pt-14 text-center  ">
+         <div class="w-[6.5rem] ">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
             >
@@ -35,7 +34,7 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-2"
             >
                <img src="css.png" alt="" class="p-4 flip-horizontal" />
             </div>
@@ -43,13 +42,13 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-2"
             >
                <img src="svelte.png" alt="" class="p-4 flip-horizontal" />
             </div>
             <p class="p-3 text-base">Svelte</p>
          </div>
-         <div class="w-24">
+         <div class="w-[6.5rem]">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
             >
@@ -58,7 +57,7 @@
             <p class="p-3 text-base">Tailwind CSS</p>
          </div>
       </div>
-      <div class="flex gap-[3.25rem] pl-20 text-center">
+      <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 pl-20 text-center">
          <div class="w-24">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-1"
@@ -69,7 +68,7 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-1"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
             >
                <img src="firebase.png" alt="" class="p-6 flip-horizontal" />
             </div>
@@ -77,15 +76,15 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
             >
-               <img src="js1.png" alt="" class="p-2 flip-horizontal" />
+               <img src="js1.png" alt="" class="p-6 flip-horizontal" />
             </div>
             <p class="p-3 text-base">JavaScript</p>
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-1"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
             >
                <img src="wordpress.png" alt="" class="p-5 flip-horizontal" />
             </div>
@@ -95,9 +94,10 @@
    </div>
 </div>
 
+
 <style>
    .flip-horizontal:hover {
-      animation: flip-horizontal 0.9s infinite;
+      animation: flip-horizontal 1.0s infinite;
    }
 
    @keyframes flip-horizontal {
