@@ -1,4 +1,4 @@
-<div class="fixed top-0 header z-50 w-full flex justify-between items-center px-8 lg:px-16 py-3 bg-[#7177bb]">
+<div class="fixed top-0 header z-50 w-full flex justify-between items-center px-8 lg:px-16 py-3 bg-[#131420]">
     <div class="logo flex">
       <img src="Group 17.png" alt="" class="w-[30%]">
       <a href="/" class="text-white text-2xl font-semibold absolute pl-10 pt-5">PS</a>
