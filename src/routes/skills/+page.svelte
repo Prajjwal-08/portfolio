@@ -1,18 +1,19 @@
 <script>
    import Navbar from "$lib/components/navbar.svelte";
+   
 </script>
 
 <Navbar />
 
-<div class="text-white w-[1000px] max-w-full ">
-   <div class="text-5xl flex gap-3 pt-20 px-20">
+<div class="text-white  w-full ">
+   <div class="text-5xl flex gap-3 pt-20 px-20 max-sm:px-5 max-sm:w-full">
       <p class="">
          Technical
          <span class="text-teal-300">Skills</span>
       </p>
    </div>
-   <div class=" pl-20 pt-4 grid grid-cols-2 sm:grid-cols-1 w-full absolute">
-      <p class="text-2xl md:text-xl md:w-[70%] lg:w-[60%] ">
+   <div class=" pl-20 pt-4 max-sm:px-5 grid grid-cols-2 sm:grid-cols-1 w-full ">
+      <p class="text-2xl md:text-xl md:w-[70%] lg:w-[60%] max-sm:w-full ">
          I possess a diverse set of technical skills that enable me to tackle
          complex challenges with ease. From developing innovative solutions to
          analyzing data and optimizing processes, I bring a versatile and
@@ -22,13 +23,13 @@
      
       <img src="learn.png" alt=" " class="hidden sm:block lg:top-12 md:right-0 lg:absolute md:mt-10  max-w-1/2 xl:w-max  w-80 lg:right-10 sm:top-40 " />
    </div>
-       <div class="lg:w-[50rem]  lg:mt-[10rem] md:mt-[40rem] sm:mt-[40rem] max-sm:ml-52">
-      <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 pl-20 pt-14 text-center  ">
+   <div class="lg:w-[50rem]  lg:mt-[10rem] md:mt-[40rem]  ">
+      <div class="grid lg:grid-cols-4 md:grid-cols-4  max-sm:grid-cols-2 pl-20 max-sm:px-7 pt-14 text-center ">
          <div class="w-[6.5rem] ">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-2"
             >
-               <img src="html.png" alt="" class="p-2 flip-horizontal" />
+               <img src="html.png" alt="" class="p-4 flip-horizontal" />
             </div>
             <p class="p-3 text-base">HTML</p>
          </div>
@@ -57,7 +58,7 @@
             <p class="p-3 text-base">Tailwind CSS</p>
          </div>
       </div>
-      <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 pl-20 text-center">
+      <div class="grid lg:grid-cols-4 md:grid-cols-4 max-sm:px-7 max-sm:grid-cols-2 sm:grid-cols-2 pl-20 text-center">
          <div class="w-24">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-1"
@@ -93,7 +94,6 @@
       </div>
    </div>
 </div>
-
 
 <style>
    .flip-horizontal:hover {

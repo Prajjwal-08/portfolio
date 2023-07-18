@@ -7,7 +7,7 @@
 	<p class="text-5xl text-white font-medium">Projects</p>
 </div>
 
-<div class="grid lg:grid-cols-2 md:grid-cols-2 justify-items-center place-items-center   md:gap-16 sm:grid-cols-1 text-white mb-10">
+<div class="grid lg:grid-cols-2 md:grid-cols-2 justify-items-center place-items-center mx-10  md:gap-16 sm:grid-cols-1 text-white mb-10">
 	<div class="lg:w-[20rem] md:w-[15rem] sm:w-[5rem] pt-14 font-medium text-center">
 		<div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 w-fit  p-4">
 			<img src="image 31.png" alt="" class="sm:hidden lg:block md:block rounded-xl" />
@@ -72,6 +72,7 @@
 	  </div>
 	  
 </div>
+
 <style>
 	.button {
 		display: flex;

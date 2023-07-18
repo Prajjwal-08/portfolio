@@ -1,32 +1,35 @@
 <script>
-	import Navbar from "$lib/components/navbar.svelte";
+  import Navbar from "$lib/components/navbar.svelte";
   let num = 0;
-  var arr=["WEB DEVELOPER","WEB DESIGNER","FREELANCER "]
-  
-  const interval = setInterval(function() {
+  var arr = ["WEB DEVELOPER", "WEB DESIGNER", "FREELANCER "];
+
+  const interval = setInterval(function () {
     if (num < 2) {
-      
-      num=num+1;
+      num = num + 1;
     } else {
       num = 0;
     }
- }, 6000);
+  }, 6000);
 </script>
 
 <Navbar />
-<div class="  flex w-full pt-12">
-  <div class=" left pt-14 pl-8  w-[60%] md: z-10 ">
+<div class="flex max-sm:grid  p-8 pt-10 w-full m-auto ">
+  <div class="left w-1/2 max-sm:w-full">
     <h2
-      class="text-3xl font-medium bg-bglr text-transparent bg-clip-text flex   gap-2  w-fit text-white"
+      class="text-3xl font-medium bg-bglr text-transparent bg-clip-text flex gap-2 text-white "
     >
       Who I am ?
     </h2>
-    <h1 class="text-4xl font-medium text-white whitespace-nowrap w-fit gap-10">
-      Prajjwal Shrimal a 
-      <div class=" w-fit text-transparent ml-4 bg-clip-text bg-gradient-to-r from-[#1cdce8] via-[#bb77ed] to-[#f34a62] animate-typing whitespace-nowrap  border-r-4 border-r-white  ">{arr[num]}</div>
+    <h1 class="text-4xl font-medium text-white whitespace-nowrap   max-sm:text-lg" style="text-transform: uppercase;">
+      Prajjwal Shrimal
+      <div
+        class=" w-fit text-transparent bg-clip-text bg-gradient-to-r from-[#1cdce8] via-[#bb77ed] to-[#f34a62] animate-typing whitespace-nowrap border-r-4 border-r-white"
+      >
+        {arr[num]}
+      </div>
     </h1>
     <!-- from-[#1cdce8] via-[#bb77ed] to-[#f34a62] -->
-    <p class="text-medium text-left mt-8 text-white  ">
+    <p class="text-medium text-left mt-8 text-white ">
       I'm Prajjwal Shrimal, a passionate web developer with expertise in HTML,
       CSS, and JavaScript. I thrive on solving complex problems and creating
       user-friendly web experiences. With a strong foundation in web
@@ -60,14 +63,18 @@
       >
     </a>
   </div>
-  <div class="w-fit right-0  max-sm:right-0 md:right-80  max-sm:mt-40 ">
-    <img src="bgh.png" alt="All icons" class="z-20 h-[500px] w-full " />
+  <div class="right w-1/2  relative max-sm:w-full ">
+    <img
+      src="bgh.png"
+      alt="All icons"
+      class="absolute z-20 h-[500px]  bottom-0 top-10 right-20 sm:right-0 max-sm:relative max-sm:right-0"
+    />
   </div>
 </div>
-<div class="mt-12 px-10 text-white">
-  <ol class="items-center sm:flex">
+<div class="mt-12 px-10 text-white ">
+  <ol class="items-center  md:flex md:w-fit gap-20">
     <!-- HIgh school -->
-    <li class="relative mb-6 sm:mb-0 h-80">
+    <li class="relative mb-6 sm:mb-0 h-80  sm:w-64 max-sm:w-40 ">
       <h2 class="mb-5 text-xl">High School</h2>
       <div class="flex items-center">
         <div
@@ -77,9 +84,9 @@
         </div>
         <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
       </div>
-      <div class="mt-5 w-96">
+      <div class="mt-5 w-96 max-sm:w-40">
         <div
-          class="box w-64 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+          class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
         >
           <h3 class="text-xl font-semibold mb-2">High School</h3>
           <h3 class="text-base mb-2">Vidyasthali Public School</h3>
@@ -94,7 +101,7 @@
       </div>
     </li>
     <!-- Graduate -->
-    <li class="relative mb-6 sm:mb-0 h-80">
+    <li class="relative sm:w-64 max-sm:w-40 mb-6 sm:mb-0 h-80">
       <h2 class="mb-5 text-xl">Graduate</h2>
       <div class="flex items-center">
         <div
@@ -104,9 +111,9 @@
         </div>
         <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
       </div>
-      <div class="mt-5 w-96">
+      <div class="mt-5 w-96 max-sm:w-40">
         <div
-          class="box w-64 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+          class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
         >
           <h3 class="text-xl font-semibold mb-2">Graduate</h3>
           <h3 class="text-base mb-2">JECRC University</h3>
@@ -121,7 +128,7 @@
       </div>
     </li>
     <!-- Internship -->
-    <li class="relative mb-6 sm:mb-0 h-80">
+    <li class="relative sm:w-64 max-sm:w-40 mb-6 sm:mb-0 h-80 ">
       <h2 class="mb-5 text-xl">Internship</h2>
       <div class="flex items-center">
         <div
@@ -131,9 +138,9 @@
         </div>
         <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
       </div>
-      <div class="mt-5 w-96">
+      <div class="mt-5 w-96 max-sm:w-40">
         <div
-          class="box w-64 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+          class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
         >
           <h3 class="text-xl font-semibold mb-2">Internship</h3>
           <h3 class="text-base mb-2">TensaX Inovation Lab</h3>
@@ -159,6 +166,7 @@
         </li> -->
   </ol>
 </div>
+
 
 <style>
   .button {
@@ -229,18 +237,7 @@
     box-sizing: border-box;
   }
 
-  h1 {
-    color: #ffffff;
-    font-family: tahoma;
-    font-size: 2.75rem;
-    font-weight: 70;
-    line-height: 1.6;
-    text-transform: uppercase;
-    /* white-space: nowrap; */
-    overflow: hidden;
-    position: relative;
-    /* width: 70rem; */
-  }
+  
 
   .message {
     color: #ffffff;
