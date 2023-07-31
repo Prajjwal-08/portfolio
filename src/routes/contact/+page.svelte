@@ -1,40 +1,45 @@
 <script>
-    import Navbar from "$lib/components/navbar.svelte"
+  import Navbar from "$lib/components/navbar.svelte";
   import { initializeApp, getApps, getApp } from "firebase/app";
-  import { getFirestore, onSnapshot, collection, doc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-  import {firebaseConfig} from "./firebaseConfig"
+  import { getFirestore, collection, addDoc } from "firebase/firestore";
+  import { firebaseConfig } from "./firebaseConfig";
   import { browser } from "$app/environment";
- 
 
+  // Check if Firebase app is initialized
   const firebaseApp = browser && (getApps().length === 0 ? initializeApp(firebaseConfig) : getApp());
   const db = browser && getFirestore();
   const colRef = browser && collection(db, "todos");
-  let todos = [];
+
   let name = "", email = "", msg = "";
   let error = "";
-  const unsubscribe = browser && onSnapshot(colRef, (querySnapshot) => {
-    let fbTodos = [];
-    querySnapshot.forEach((doc) => {
-        let todo = { ...doc.data(), id: doc.id };
-        fbTodos = [todo, ...fbTodos];
-    });
-    todos = fbTodos;
-  });
+
   const addTodo = async () => {
-    if (name !== "") {
-      const docRef = await addDoc(collection(db, "todos" ), {
-        name: name,
-        email: email,
-        message: msg,
-        createdAt: new Date(),
-      });
-      error = "";
-    } else{
-      error = "Name is empty";   
+    // Validate input fields
+    if (name.trim() !== "") {
+      try {
+        // Add form data to Firebase
+        await addDoc(colRef, {
+          name: name.trim(),
+          email: email.trim(),
+          message: msg.trim(),
+          createdAt: new Date().toISOString(),
+        });
+        error = ""; // Reset error message if successful
+        name = "";
+        email = "";
+        msg = "";
+      } catch (err) {
+        error = "Error occurred while submitting the form. Please try again later.";
+        console.error(err);
+      }
+    } else {
+      error = "Name is empty";
     }
-    name = "", email = "", msg = "";
   };
 </script>
+
+<!-- Rest of the HTML and CSS remains unchanged -->
+
 <Navbar/>
 <div class="bg-[#131420] h-screen w-full sm:text-lg max-w-[1500px]">
   <div class="flex justify-center pt-20">
@@ -70,14 +75,14 @@
       <form class=" grid-col gap-6 p-5 m-6   outline-white outline justify-items-center place-items-center w-full bg-[#131420]">
         <div class=" grid grid-flow-row grid-rows-3">
           <label class="block text-gray-200 font-bold text underline leading-10" for="input1">Your Name</label>
-          <input class="w-full px-4 py-3  text-white bg-transparent outline-double " type="text" id="input1" placeholder="Full Name" />
+          <input class="w-full px-4 py-3  text-white bg-transparent outline-double " bind:value={name} type="text" id="input1" placeholder="Full Name" />
           <label class="block text-gray-200 font-bold underline leading-10" for="input2">Your Email</label>
-          <input class="w-full px-4 py-3 rounded-lg text-white  bg-transparent outline-double  " type="text" id="input2" placeholder="xyz@gmail.com" />
+          <input class="w-full px-4 py-3 rounded-lg text-white  bg-transparent outline-double  " bind:value={email} type="text" id="input2" placeholder="xyz@gmail.com" />
           <label class="block text-gray-200 font-bold underline leading-10" for="textarea1">Message</label>
-          <textarea class="w-full px-4 py-3 rounded-lg text-white font-family bg-transparent outline-double  " id="textarea1" placeholder="Enter your message"></textarea>
+          <textarea class="w-full px-4 py-3 rounded-lg text-white font-family bg-transparent outline-double  " bind:value={msg} id="textarea1" placeholder="Enter your message"></textarea>
         </div>
         <div class=" text-center gap-2 mt-5">
-          <button class="" type="submit" >Submit</button>
+          <button class="" type="submit" on:click={addTodo} >Submit</button>
         </div>
       </form>
     </div>
