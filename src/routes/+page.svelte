@@ -14,7 +14,7 @@
 <Navbar />
 
   <div class="flex text-white p-8 pt-20">
-    <div class="Left lg:w-1/2 md:w-1/2 sm:w-full ">
+    <div class="Left lg:w-1/2 md:w-1/2 sm:w-full">
       
       <p class="text-5xl lg:gap-0 md:gap-0  sm:w-full font-bold mt-10">
         Hi I'm <span class="sm:leading-6 "

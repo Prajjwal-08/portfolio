@@ -19,7 +19,9 @@
     return () => document.removeEventListener("click", handleClickOutside);
   });
 </script>
-
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+  
 <nav class="bg-[#131420] bg-opacity-90 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 navbar">
     <!-- Menu Icon -->
@@ -76,7 +78,7 @@
           <button
             class="group border-white border-2 w-[130px] h-9 text-center text-white rounded-full"
             onclick="window.location.href='/contact'"
-          >
+           >
             <h1 class="group-hover:hidden -mt-[2px]">Contact Us</h1>
             <i class="fa fa-envelope-o hidden group-hover:block text-[21px]" />
           </button>
@@ -86,7 +88,7 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div class="{`mobile-menu ${isMenuOpen ? '' : 'closed'}`} sm:hidden">
+  <div class="{`mobile-menu ${isMenuOpen ? '' : 'closed'}`} sm:hidden right-0">
     <div class="px-2 pt-2 pb-3 space-y-1">
       <a
         href="/"
@@ -120,6 +122,7 @@
 <style>
   .navbar {
     position: relative;
+     right: auto;
   }
 
   .menu-icon {

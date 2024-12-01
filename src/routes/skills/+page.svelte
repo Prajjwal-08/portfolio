@@ -1,31 +1,36 @@
 <script>
    import Navbar from "$lib/components/navbar.svelte";
-   
 </script>
 
 <Navbar />
 
-<div class="text-white  w-full ">
-   <div class="text-5xl flex gap-3 pt-20 px-20 max-sm:px-5 max-sm:w-full">
+<div class="text-white w-full">
+   <div class="text-5xl flex gap-3 pt-20 px-20 max-sm:px-5 max-sm:w-full max-sm:pt-4 max-sm:text-4xl">
       <p class="">
          Technical
          <span class="text-teal-300">Skills</span>
       </p>
    </div>
-   <div class=" pl-20 pt-4 max-sm:px-5 grid grid-cols-2 sm:grid-cols-1 w-full ">
-      <p class="text-2xl md:text-xl md:w-[70%] lg:w-[60%] max-sm:w-full ">
+   <div class=" pl-20 pt-4 max-sm:px-5 grid grid-cols-2 max-sm:grid-cols-1 w-full">
+      <p class="text-2xl md:text-xl md:w-[70%] lg:w-[60%] max-sm:w-full max-sm:text-xl">
          I possess a diverse set of technical skills that enable me to tackle
          complex challenges with ease. From developing innovative solutions to
          analyzing data and optimizing processes, I bring a versatile and
          adaptable approach. My expertise lies in leveraging technology to drive
          efficiency, enhance user experiences, and achieve business objectives.
       </p>
-     
-      <img src="learn.png" alt=" " class="hidden sm:block lg:top-12 md:right-0 lg:absolute md:mt-10  max-w-1/2 xl:w-max  w-80 lg:right-10 sm:top-40 " />
+
+      <img
+         src="learn.png"
+         alt=" "
+         class="hidden sm:block lg:top-16 md:right-0 lg:absolute md:mt-0 max-w-1/2 xl:w-max w-80 lg:right-10 sm:top-40"
+      />
    </div>
-   <div class="lg:w-[50rem]  lg:mt-[10rem] md:mt-[40rem]  ">
-      <div class="grid lg:grid-cols-4 md:grid-cols-4  max-sm:grid-cols-2 pl-20 max-sm:px-7 pt-14 text-center ">
-         <div class="w-[6.5rem] ">
+   <div class="lg:w-[50rem] lg:block  ">
+      <div
+         class="grid lg:grid-cols-6 md:grid-cols-4 max-sm:grid-cols-2 pl-20 max-sm:px-7 pt-14 text-center md:grid-col-4"
+      >
+         <div class="w-[6.5rem]">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-2"
             >
@@ -33,7 +38,7 @@
             </div>
             <p class="p-3 text-base">HTML</p>
          </div>
-         <div class="w-24">
+         <div class="w-[6.5rem]">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-2"
             >
@@ -51,14 +56,24 @@
          </div>
          <div class="w-[6.5rem]">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+            class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 p-2 py-7"
             >
-               <img src="Tailwind.png" alt="" class="flip-horizontal" />
-            </div>
-            <p class="p-3 text-base">Tailwind CSS</p>
+            <img src="php.png" alt="" class="flip-horizontal" />
          </div>
+         <p class="p-3 text-base">Php</p>
       </div>
-      <div class="grid lg:grid-cols-4 md:grid-cols-4 max-sm:px-7 max-sm:grid-cols-2 sm:grid-cols-2 pl-20 text-center">
+      <div class="w-[6.5rem]">
+         <div
+            class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-4"
+          >
+            <img src="Tailwind.png" alt="" class="flip-horizontal" />
+         </div>
+         <p class="p-2 text-base">Tailwind CSS</p>
+      </div>
+    <!-- </div>
+      <div
+         class="grid lg:grid-cols-5 max-sm:grid-cols-2 pl-20 max-sm:px-7 pt-14 text-center"
+      > -->
          <div class="w-24">
             <div
                class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit p-1"
@@ -69,7 +84,7 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit"
             >
                <img src="firebase.png" alt="" class="p-6 flip-horizontal" />
             </div>
@@ -77,7 +92,7 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit"
             >
                <img src="js1.png" alt="" class="p-6 flip-horizontal" />
             </div>
@@ -85,11 +100,29 @@
          </div>
          <div class="w-24">
             <div
-               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit "
+               class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40 w-fit"
             >
                <img src="wordpress.png" alt="" class="p-5 flip-horizontal" />
             </div>
             <p class="p-3 text-base">WordPress</p>
+         </div>
+         <div class="w-24">
+            <div class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40">
+               <img src="laravel.png" alt="" class="p-5 flip-horizontal" />
+            </div>
+            <p class="p-2 text-base">Laravel</p>
+         </div>
+         <div class="w-24">
+            <div class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40">
+               <img src="shopify.webp" alt="" class="p-5 flip-horizontal" />
+            </div>
+            <p class="p-2 text-base">Shopify</p>
+         </div>
+         <div class="w-24">
+            <div class="backdrop-blur bg-[#4B4B4B] rounded-xl bg-opacity-40">
+               <img src="ci.png" alt="" class="p-5 flip-horizontal" />
+            </div>
+            <p class="p-2 text-base">CodeIgniter</p>
          </div>
       </div>
    </div>
@@ -97,7 +130,7 @@
 
 <style>
    .flip-horizontal:hover {
-      animation: flip-horizontal 1.0s infinite;
+      animation: flip-horizontal 1s infinite;
    }
 
    @keyframes flip-horizontal {

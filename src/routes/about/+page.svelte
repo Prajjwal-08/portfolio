@@ -1,7 +1,7 @@
 <script>
   import Navbar from "$lib/components/navbar.svelte";
   let num = 0;
-  var arr = ["WEB DEVELOPER", "WEB DESIGNER", "FREELANCER "];
+  var arr = ["WEB DEVELOPER", "WEB DESIGNER", "FREELANCER", "FULL STACK WEB DEVELOPER"];
 
   const interval = setInterval(function () {
     if (num < 2) {
@@ -13,37 +13,44 @@
 </script>
 
 <Navbar />
-<div class="flex max-sm:grid  p-8 pt-10 w-full m-auto ">
-  <div class="left w-1/2 max-sm:w-full">
+<div class="flex max-sm:grid p-8 pt-10 w-full m-auto">
+  <div class="left max-sm:w-full">
     <h2
-      class="text-3xl font-medium bg-bglr text-transparent bg-clip-text flex gap-2 text-white "
+      class="text-3xl font-medium bg-bglr text-transparent bg-clip-text flex gap-2 text-white"
     >
       Who I am ?
     </h2>
-    <h1 class="text-4xl font-medium text-white whitespace-nowrap   max-sm:text-lg" style="text-transform: uppercase;">
+    <h1
+      class="text-4xl font-medium text-white whitespace-nowrap max-sm:text-lg"
+      style="text-transform: uppercase;"
+    >
       Prajjwal Shrimal
       <div
+        style="width: fit-content;"
         class=" w-fit text-transparent bg-clip-text bg-gradient-to-r from-[#1cdce8] via-[#bb77ed] to-[#f34a62] animate-typing whitespace-nowrap border-r-4 border-r-white"
       >
         {arr[num]}
       </div>
     </h1>
     <!-- from-[#1cdce8] via-[#bb77ed] to-[#f34a62] -->
-    <p class="text-medium text-left mt-8 text-white ">
-      I'm Prajjwal Shrimal, a passionate web developer with expertise in HTML,
-      CSS, and JavaScript. I thrive on solving complex problems and creating
-      user-friendly web experiences. With a strong foundation in web
-      development, I constantly stay updated with the latest industry trends and
-      technologies. I enjoy collaborating with diverse teams, exchanging ideas,
-      and learning from others. My goal as a web developer is to create clean
-      and efficient code that not only meets technical standards but also
-      resonates with users on a deeper level. I believe in making the web a
-      better place, one project at a time. If you're seeking a dedicated,
-      creative, and reliable web developer, I would love to connect and discuss
-      how we can bring your ideas to life. Let's work together to create
-      something amazing!
+    <p class="text-medium text-left mt-8 text-white">
+      I'm Prajjwal Shrimal, a passionate web developer with expertise in PHP,
+      Laravel, CodeIgniter, and WordPress. I thrive on solving complex problems
+      and creating user-friendly web experiences using HTML, CSS, and
+      JavaScript. With a strong foundation in web development, I constantly stay
+      updated with the latest industry trends and technologies. I excel in both
+      frontend and backend development, database management, and API
+      integration.
     </p>
-    <a href="cv.pdf" class="button mt-12 tracking-wide" download>
+    <p class="text-medium text-left mt-8 text-white">
+      I enjoy collaborating with diverse teams, exchanging ideas, and learning
+      from others. My goal as a web developer is to create clean and efficient
+      code that meets technical standards and resonates with users on a deeper
+      level. I am committed to delivering high-quality, scalable solutions that
+      enhance user experience. If you're seeking a dedicated, creative, and
+      reliable web developer, let's work together to create something amazing!
+    </p>
+    <a href="cv-Prajjwal-Shrimal.pdf" class="button mt-12 tracking-wide" download>
       <span class="button__text">Download CV</span>
       <span class="button__icon"
         ><svg
@@ -63,72 +70,173 @@
       >
     </a>
   </div>
-  <div class="right w-1/2  relative max-sm:w-full ">
+  <!-- <div class="right w-1/2 relative max-sm:w-full">
     <img
       src="bgh.png"
       alt="All icons"
-      class="absolute z-20 h-[500px]  bottom-0 top-10 right-20 sm:right-0 max-sm:relative max-sm:right-0"
+      class="absolute z-20 h-[500px] bottom-0 top-10 right-20 sm:right-0 max-sm:relative max-sm:right-0 hidden md:block" 
     />
-  </div>
+  </div> -->
 </div>
-<div class="mt-12 px-10 text-white ">
-  <ol class="items-center  md:flex md:w-fit gap-20">
-    <!-- HIgh school -->
-    <li class="relative mb-6 sm:mb-0 h-80  sm:w-64 max-sm:w-40 ">
+<div class="mt-12 px-10 text-white">
+  <ol class="items-center md:w-fit gap-20">
+    <h1 class="text-center text-2xl my-2 w-full">Qualifications</h1>
+    <!-- Hidden -->
+    <li class="relative mb-6 sm:mb-0 h-full sm:w-64 max-sm:w-40 hidden">
       <h2 class="mb-5 text-xl">High School</h2>
-      <div class="flex items-center">
-        <div
-          class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
-        >
-          <i class="fa-solid fa-school-circle-check text-blue-800" />
+      <div class="lg:flex md:flex sm:block">
+        <div>
+          <div class="flex items-center">
+            <div
+              class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+            >
+              <i class="fa-solid fa-school-circle-check text-blue-800" />
+            </div>
+            <div
+              class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"
+            />
+          </div>
         </div>
-        <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
-      </div>
-      <div class="mt-5 w-96 max-sm:w-40">
-        <div
-          class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
-        >
-          <h3 class="text-xl font-semibold mb-2">High School</h3>
-          <h3 class="text-base mb-2">Vidyasthali Public School</h3>
-          <h3 class="text-sm mb-3">
-            Completed <strong>12th</strong> in commerce stream
-          </h3>
-          <time
-            class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
-            >2019 - 2020</time
-          >
+        <div>
+          <div class="mt-5 w-96 max-sm:w-40">
+            <div
+              class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+            >
+              <h3 class="text-xl font-semibold mb-2">High School</h3>
+              <h3 class="text-base mb-2">Vidyasthali Public School</h3>
+              <h3 class="text-sm mb-3">
+                Completed <strong>12th</strong> in commerce stream
+              </h3>
+              <time
+                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >2019 - 2020</time
+              >
+            </div>
+          </div>
         </div>
       </div>
     </li>
     <!-- Graduate -->
-    <li class="relative sm:w-64 max-sm:w-40 mb-6 sm:mb-0 h-80">
-      <h2 class="mb-5 text-xl">Graduate</h2>
-      <div class="flex items-center">
-        <div
-          class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
-        >
-          <i class="fa-solid fa-user-graduate text-blue-800" />
+    <li class="relative sm:w-64 max-sm:w-60 mb-6 sm:mb-10 h-full">
+      <div class="lg:flex md:flex sm:block">
+        <div class="">
+         
+            <div class="flex items-center">
+              <div
+                class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+              >
+                <i class="fa-solid fa-user-graduate text-blue-800" />
+              </div>
+              <div class=" sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+            </div>
+
+          <div class="mt-5 w-96 max-sm:w-80">
+            <div
+              class="box w-64 max-sm:w-80 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+            >
+              <h3 class="text-xl font-semibold mb-2">Graduation</h3>
+              <h3 class="text-base mb-2">JECRC University</h3>
+              <h3 class="text-sm mb-3">
+                <strong>Bachelors in Computer Application</strong> with specialisation
+                in Data Science
+              </h3>
+              <time
+                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >2021 - 2023</time
+              >
+            </div>
+          </div>
         </div>
-        <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
-      </div>
-      <div class="mt-5 w-96 max-sm:w-40">
-        <div
-          class="box w-64 max-sm:w-40 p-4 border border-white border-opacity-40 rounded-2xl text-center"
-        >
-          <h3 class="text-xl font-semibold mb-2">Graduate</h3>
-          <h3 class="text-base mb-2">JECRC University</h3>
-          <h3 class="text-sm mb-3">
-            Completed <strong>BCA</strong> in specialisation Data Scince
-          </h3>
-          <time
-            class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
-            >2021 - 2023</time
-          >
+
+        <div class="">
+          <div class="flex items-center">
+            <div
+              class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+            >
+              <i class="fa-solid fa-user-graduate text-blue-800" />
+            </div>
+            <div class=" sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+          </div>
+          <div class="mt-5 w-96 max-sm:w-80">
+            <div
+              class="box w-64 max-sm:w-80 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+            >
+              <h3 class="text-xl font-semibold mb-2">Post Graduation</h3>
+              <h3 class="text-base mb-2">Manipal University</h3>
+              <h3 class="text-sm mb-3">
+                Persuing <strong>Masters in Computer Application</strong>
+              </h3>
+              <time
+                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >2023 - 2025</time
+              >
+            </div>
+          </div>
         </div>
       </div>
     </li>
+
     <!-- Internship -->
-    <li class="relative sm:w-64 max-sm:w-40 mb-6 sm:mb-0 h-80 ">
+    <!-- Graduate -->
+    <h1 class="text-center text-2xl my-2 w-full">Experiences</h1>
+    <li class="relative sm:w-64 max-sm:w-40 mb-10 sm:mb-10 h-full flex">
+      <div class="lg:flex md:flex sm:block">
+        <div>
+          <div class="flex items-center">
+            <div
+              class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+            >
+              <i class="fa-solid fa-user-graduate text-blue-800" />
+            </div>
+            <div class=" sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+          </div>
+          <div class="mt-5 w-96 max-sm:w-100">
+            <div
+              class="box w-64 max-sm:w-100 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+            >
+              <h3 class="text-xl font-semibold mb-2">Internship</h3>
+              <h3 class="text-base mb-2">TensaX Inovation Lab</h3>
+              <h3 class="text-sm mb-3">
+                Completed internship as a <br />
+                <strong>Web Developer Intern</strong> using Svelte & Tailwind
+              </h3>
+              <time
+                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >Jan, 2023 - June, 2023</time
+              >
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center">
+            <div
+              class="z-10 flex items-center justify-center w-10 h-10 bg-white rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+            >
+              <i class="fa-solid fa-user-graduate text-blue-800" />
+            </div>
+            <div class=" sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+          </div>
+          <div class="mt-5 w-96 max-sm:w-40">
+            <div
+              class="box w-64 max-sm:w-100 p-4 border border-white border-opacity-40 rounded-2xl text-center"
+            >
+              <h3 class="text-xl font-semibold mb-2">Full Stack Developer</h3>
+              <h3 class="text-base mb-2">Programmates Pvt Ltd</h3>
+              <h3 class="text-sm mb-3">
+                I develop dynamic websites with PHP, Laravel, CodeIgniter,
+                WordPress, and Shopify.
+              </h3>
+              <time
+                class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                >Aug, 2023 - Present</time
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <!-- hidden -->
+    <li class="relative sm:w-64 max-sm:w-40 mb-6 sm:mb-0 h-80 hidden">
       <h2 class="mb-5 text-xl">Internship</h2>
       <div class="flex items-center">
         <div
@@ -155,18 +263,8 @@
         </div>
       </div>
     </li>
-    <!-- <li class="relative mb-6 sm:mb-0 h-80">
-            <h2 class="mb-5 text-xl">Masters</h2>
-            <div class="flex items-center">
-                <div class="z-10 flex items-center justify-center w-6 h-6 bg-white rounded-full ring-0 ring-white  sm:ring-8 dark:ring-gray-900 shrink-0">
-                    <i class="fa-solid fa-building text-blue-800 a" ></i>
-                </div>
-                <div class="hidden sm:flex w-8 bg-gray-200 h-0.5 dark:bg-gray-700"></div>
-            </div>
-        </li> -->
   </ol>
 </div>
-
 
 <style>
   .button {
@@ -236,8 +334,6 @@
   * {
     box-sizing: border-box;
   }
-
-  
 
   .message {
     color: #ffffff;
