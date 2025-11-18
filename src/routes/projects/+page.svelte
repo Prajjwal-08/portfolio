@@ -3,14 +3,16 @@
 </script>
 
 <Navbar />
-<div class="text-center pt-20 max-sm:pt-0 md:pt-5">
-  <p class="text-5xl text-white font-medium">Projects</p>
+
+<div class="text-center pt-20 max-sm:pt-5 md:pt-5">
+  <p class="text-4xl sm:text-5xl text-white font-medium">Projects</p>
 </div>
+
 <div class="flex flex-col items-center justify-center">
-  <!-- Grid container with custom 2-1 layout pattern -->
-  <div class="sm:block md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8 mx-10 text-white mb-10 flex-class">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mx-4 sm:mx-10 text-white mb-10 flex-class">
+
     <!-- Project Card 1 -->
-    <div class="pt-14 font-medium text-center w-fit boxes">
+    <div class="pt-10 font-medium text-center boxes">
       <div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 p-4">
         <a href="https://github.com/Prajjwal-08/web-developement">
           <img src="image 31.png" alt="Music Web" class="w-full h-auto rounded-xl mb-4" />
@@ -26,10 +28,10 @@
     </div>
 
     <!-- Project Card 2 -->
-    <div class="pt-14 font-medium text-center w-fit boxes">
+    <div class="pt-10 font-medium text-center boxes">
       <div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 p-4">
         <a href="http://github.com/Prajjwal-08/soda-shop/tree/eba2eba3a982ac203cc30727a2efedf989efb5fa/soda%20shop">
-          <img src="image 30.png" alt="Soda Shop" class="w-[46%] rounded-xl mx-auto mb-4" />
+          <img src="image 30.png" alt="Soda Shop" class="w-1/2 mx-auto rounded-xl mb-4" />
         </a>
         <p class="p-3 text-xl">Soda Shop</p>
         <span class="block mb-3">
@@ -41,8 +43,8 @@
       </div>
     </div>
 
-    <!-- Project Card 3 (full width in second row) -->
-    <div class="col-span-2 pt-14 font-medium text-center boxes-1">
+    <!-- Project Card 3 (Full width on all screens) -->
+    <div class="sm:col-span-2 pt-10 font-medium text-center boxes-1">
       <div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 p-4">
         <a href="http://valuationupdates.com/astrologer/">
           <img src="astrologer.jpg" alt="Astrology Web" class="w-full h-auto rounded-xl mb-4" />
@@ -58,7 +60,7 @@
     </div>
 
     <!-- Project Card 4 -->
-    <div class="pt-14 font-medium text-center w-fit boxes">
+    <div class="pt-10 font-medium text-center boxes">
       <div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 p-4">
         <a href="https://github.com/Prajjwal-08/portfolio">
           <img src="portfolio.jpg" alt="Portfolio" class="w-full h-auto rounded-xl mb-4" />
@@ -74,7 +76,7 @@
     </div>
 
     <!-- Project Card 5 -->
-    <div class="pt-14 font-medium text-center w-fit boxes">
+    <div class="pt-10 font-medium text-center boxes">
       <div class="backdrop-blur bg-[#fff] rounded-xl bg-opacity-40 p-4">
         <a href="https://github.com/Prajjwal-08/File-Management-System">
           <img src="file-mgmt.jpeg" alt="File Management System" class="w-full h-auto rounded-xl mb-4" />
@@ -88,22 +90,26 @@
         </a>
       </div>
     </div>
+
   </div>
 </div>
 
-
-
 <style>
-  .boxes,.boxes .backdrop-blur{
-    width: 400px;
+  .boxes, .boxes .backdrop-blur {
+    width: 100%;
+    max-width: 400px;
     min-height: 450px;
   }
-  .boxes-1{
-    width: 850px;
+
+  .boxes-1 {
+    width: 100%;
+    max-width: 850px;
   }
-  .flex-class{
+
+  .flex-class {
     justify-content: center;
   }
+
   .button {
     display: flex;
     justify-content: center;
@@ -126,19 +132,11 @@
     transition: 400ms;
   }
 
-  .button i {
-    transition: 400ms;
-  }
-
   .button:hover {
     background-color: transparent;
   }
 
   .button:hover .text {
     color: #181717;
-  }
-
-  .button:hover i {
-    fill: #181717;
   }
 </style>
