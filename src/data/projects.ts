@@ -18,23 +18,6 @@ export const projects: Project[] = [
     tags: ["React Native", "Node.js", "Express", "REST API"],
   },
   {
-    id: "file-management-system",
-    title: "File Management System",
-    description:
-      "A Laravel solution for secure file handling, user roles, folder management, and administrative controls.",
-    image: "/file-mgmt.jpeg",
-    tags: ["Laravel", "PHP", "MySQL", "Authentication"],
-    github: "https://github.com/Prajjwal-08/File-Management-System",
-  },
-  {
-    id: "king-joinery",
-    title: "King Joinery",
-    description:
-      "A premium joinery and carpentry service website featuring a clean aesthetic, service showcase, and custom-built responsive layouts.",
-    image: "/king joinery.png",
-    tags: ["Web Design", "Tailwind CSS", "JavaScript", "Responsive"],
-  },
-  {
     id: "ipl-ecommerce",
     title: "IPL – E-commerce (Customer Panel)",
     description:
@@ -49,6 +32,23 @@ export const projects: Project[] = [
       "A full Laravel scheduling ecosystem featuring meetings, rescheduling, QR-based check-ins, logs, calendars, notifications, and retailer–rep workflows.",
     image: "/booking-management-ssytem.png",
     tags: ["Laravel", "QR Check-in", "APIs", "Workflow"],
+  },
+  {
+    id: "king-joinery",
+    title: "King Joinery",
+    description:
+    "A premium joinery and carpentry service website featuring a clean aesthetic, service showcase, and custom-built responsive layouts.",
+    image: "/king joinery.png",
+    tags: ["Web Design", "Tailwind CSS", "JavaScript", "Responsive"],
+  },
+  {
+    id: "file-management-system",
+    title: "File Management System",
+    description:
+      "A Laravel solution for secure file handling, user roles, folder management, and administrative controls.",
+    image: "/file-mgmt.jpeg",
+    tags: ["Laravel", "PHP", "MySQL", "Authentication"],
+    github: "https://github.com/Prajjwal-08/File-Management-System",
   },
   {
     id: "astrology-web",
