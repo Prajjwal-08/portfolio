@@ -10,13 +10,12 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "astrology-web",
-    title: "Astrology Web",
+    id: "omybills",
+    title: "OMyBills (App + API)",
     description:
-      "A WordPress-based astrology platform offering horoscope services, appointment booking, and a modern responsive UI.",
-    image: "/astrologer.jpg",
-    tags: ["WordPress", "UI/UX", "PHP", "E-Commerce"],
-    link: "https://valuationupdates.com/astrologer/",
+      "A complete bills management ecosystem: a React Native app for tracking bills, reminders & categories, paired with a secure Node.js API featuring authentication, bill CRUD operations, and organized category endpoints.",
+    image: "/omybills.png",
+    tags: ["React Native", "Node.js", "Express", "REST API"],
   },
   {
     id: "file-management-system",
@@ -52,11 +51,11 @@ export const projects: Project[] = [
     tags: ["Laravel", "QR Check-in", "APIs", "Workflow"],
   },
   {
-    id: "omybills",
-    title: "OMyBills (App + API)",
+    id: "astrology-web",
+    title: "Astrology Web",
     description:
-      "A complete bills management ecosystem: a React Native app for tracking bills, reminders & categories, paired with a secure Node.js API featuring authentication, bill CRUD operations, and organized category endpoints.",
-    image: "/omybills.png",
-    tags: ["React Native", "Node.js", "Express", "REST API"],
+      "A WordPress-based astrology platform offering horoscope services, appointment booking, and a modern responsive UI.",
+    image: "/astrologer.jpg",
+    tags: ["WordPress", "UI/UX", "PHP", "E-Commerce"],
   },
 ];
