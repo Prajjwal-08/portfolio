@@ -39,8 +39,8 @@ export default function AdminPage() {
   const [checkingSession, setCheckingSession] = useState(true);
 
   // Login form state
-  const [loginUsername, setLoginUsername] = useState('admin');
-  const [loginPassword, setLoginPassword] = useState('password123');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -59,6 +59,7 @@ export default function AdminPage() {
 
   // Modal / Editing states
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
+  const [projectTagsInput, setProjectTagsInput] = useState('');
   const [editingSkill, setEditingSkill] = useState<Partial<Skill> | null>(null);
   const [editingTimeline, setEditingTimeline] = useState<Partial<TimelineItem & { id?: string }> | null>(null);
 
@@ -145,9 +146,18 @@ export default function AdminPage() {
     e.preventDefault();
     if (!editingProject?.title || !editingProject.description) return;
     try {
-      await saveProject(editingProject);
+      const parsedTags = projectTagsInput
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      await saveProject({
+        ...editingProject,
+        tags: parsedTags,
+      });
       showToast('Project saved successfully!');
       setEditingProject(null);
+      setProjectTagsInput('');
       refreshData();
     } catch (err: any) {
       showToast(err.message || 'Error saving project', 'error');
@@ -299,15 +309,6 @@ export default function AdminPage() {
               </button>
             </div>
           </form>
-
-          <div className="mt-6 pt-6 border-t border-white/5 text-center text-xs text-gray-400 space-y-1">
-            <p>
-              Default username: <span className="text-white font-mono">admin</span>
-            </p>
-            <p>
-              Default password: <span className="text-white font-mono">password123</span>
-            </p>
-          </div>
         </div>
       </div>
     );
@@ -411,7 +412,7 @@ export default function AdminPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold text-white">Live Projects</h2>
             <button
-              onClick={() =>
+              onClick={() => {
                 setEditingProject({
                   title: '',
                   description: '',
@@ -419,8 +420,9 @@ export default function AdminPage() {
                   tags: [],
                   link: '',
                   github: '',
-                })
-              }
+                });
+                setProjectTagsInput('');
+              }}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1cdce8] text-black text-xs font-semibold hover:bg-[#1cdce8]/90 transition-all"
             >
               <Plus className="w-4 h-4" />
@@ -436,7 +438,10 @@ export default function AdminPage() {
                     <h3 className="font-bold text-white text-base">{proj.title}</h3>
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => setEditingProject(proj)}
+                        onClick={() => {
+                          setEditingProject(proj);
+                          setProjectTagsInput(proj.tags?.join(', ') || '');
+                        }}
                         className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 hover:text-[#1cdce8]"
                       >
                         <Edit className="w-4 h-4" />
@@ -722,16 +727,8 @@ export default function AdminPage() {
                 <label className="block text-gray-300 mb-1">Tags (Comma-separated)</label>
                 <input
                   type="text"
-                  value={editingProject.tags?.join(', ') || ''}
-                  onChange={(e) =>
-                    setEditingProject({
-                      ...editingProject,
-                      tags: e.target.value
-                        .split(',')
-                        .map((t) => t.trim())
-                        .filter(Boolean),
-                    })
-                  }
+                  value={projectTagsInput}
+                  onChange={(e) => setProjectTagsInput(e.target.value)}
                   className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
                   placeholder="Next.js, Tailwind, Full Stack"
                 />
