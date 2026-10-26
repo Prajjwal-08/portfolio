@@ -5,6 +5,7 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { Project, Skill, TimelineItem } from "@/lib/db";
 
@@ -209,46 +210,227 @@ export async function getAdminUsers(): Promise<Omit<AdminUser, "passwordHash">[]
   return users;
 }
 
+// --- AUDIT LOGS ---
+export interface AuditLog {
+  id: string;
+  message: string;
+  actor: string;
+  timestamp: string; // ISO string
+  formattedDate: string; // e.g. "Oct 26, 2026, 1:15 PM"
+}
+
+export async function logActivity(message: string, actor: string = "Admin"): Promise<void> {
+  try {
+    const now = new Date();
+    const formattedDate = now.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+
+    const logId = `log-${Date.now()}`;
+    const docRef = doc(db, "activity_logs", logId);
+    await setDoc(docRef, {
+      message,
+      actor,
+      timestamp: now.toISOString(),
+      formattedDate,
+    });
+  } catch (err) {
+    console.warn("Failed to write activity log:", err);
+  }
+}
+
+export async function getAuditLogs(): Promise<AuditLog[]> {
+  try {
+    const snapshot = await getDocs(collection(db, "activity_logs"));
+    const logs = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+    })) as AuditLog[];
+
+    // Sort descending (newest first)
+    return logs.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  } catch (err) {
+    console.warn("Failed to read activity logs:", err);
+    return [];
+  }
+}
+
+/**
+ * Real-time listener for audit logs
+ */
+export function subscribeAuditLogs(callback: (logs: AuditLog[]) => void): () => void {
+  try {
+    return onSnapshot(
+      collection(db, "activity_logs"),
+      (snapshot) => {
+        const logs = snapshot.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        })) as AuditLog[];
+        callback(
+          logs.sort(
+            (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          )
+        );
+      },
+      (err) => console.warn("Audit logs listener error:", err)
+    );
+  } catch (err) {
+    console.warn("Could not attach audit logs listener:", err);
+    return () => {};
+  }
+}
+
+/**
+ * Real-time listener for admin users
+ */
+export function subscribeAdminUsers(
+  callback: (users: Omit<AdminUser, "passwordHash">[]) => void
+): () => void {
+  try {
+    return onSnapshot(
+      collection(db, "admin_users"),
+      (snapshot) => {
+        const users: Omit<AdminUser, "passwordHash">[] = [
+          {
+            id: DEFAULT_ADMIN.id,
+            username: DEFAULT_ADMIN.username,
+            name: DEFAULT_ADMIN.name,
+            createdAt: DEFAULT_ADMIN.createdAt,
+          },
+        ];
+        snapshot.docs.forEach((d) => {
+          const data = d.data();
+          if (data.username !== "admin") {
+            users.push({
+              id: d.id,
+              username: data.username,
+              name: data.name,
+              createdAt: data.createdAt,
+            });
+          }
+        });
+        callback(users);
+      },
+      (err) => console.warn("Admin users listener error:", err)
+    );
+  } catch (err) {
+    console.warn("Could not attach admin users listener:", err);
+    return () => {};
+  }
+}
+
 // Delete admin user
-export async function deleteAdminUser(id: string): Promise<void> {
+export async function deleteAdminUser(id: string, actor: string = "Admin"): Promise<void> {
   if (id === DEFAULT_ADMIN.id) {
     throw new Error("Cannot delete primary default admin");
   }
   await deleteDoc(doc(db, "admin_users", id));
+  await logActivity(`Deleted admin user record (${id})`, actor);
 }
 
 // --- CRUD OPERATIONS ---
 
 // Projects
-export async function saveProject(project: Partial<Project> & { id?: string }): Promise<void> {
-  const id = project.id || (project.title ? project.title.toLowerCase().replace(/[^a-z0-9]/g, "-") : String(Date.now()));
+export async function saveProject(
+  project: Partial<Project> & { id?: string },
+  actor: string = "Admin"
+): Promise<void> {
+  const isNew = !project.id;
+  const rawId =
+    project.id ||
+    (project.title
+      ? project.title
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "")
+      : "");
+  const id = rawId || `project-${Date.now()}`;
   const docRef = doc(db, "projects", id);
-  await setDoc(docRef, { ...project, id, updatedAt: new Date().toISOString() }, { merge: true });
+
+  const cleanData: Record<string, any> = {
+    id,
+    title: project.title?.trim() || "Untitled Project",
+    description: project.description?.trim() || "",
+    image: project.image?.trim() || "/astrologer.jpg",
+    tags: project.tags || [],
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (project.link?.trim()) cleanData.link = project.link.trim();
+  if (project.github?.trim()) cleanData.github = project.github.trim();
+
+  await setDoc(docRef, cleanData, { merge: true });
+
+  const action = isNew ? "Added new project" : "Updated project";
+  await logActivity(`${action} "${cleanData.title}"`, actor);
 }
 
-export async function deleteProject(id: string): Promise<void> {
+export async function deleteProject(
+  id: string,
+  title?: string,
+  actor: string = "Admin"
+): Promise<void> {
   await deleteDoc(doc(db, "projects", id));
+  await logActivity(`Deleted project "${title || id}"`, actor);
 }
 
 // Skills
-export async function saveSkill(skill: Skill & { id?: string }): Promise<void> {
+export async function saveSkill(
+  skill: Skill & { id?: string },
+  actor: string = "Admin"
+): Promise<void> {
   const id = skill.id || skill.name.toLowerCase().replace(/[^a-z0-9]/g, "-");
   const docRef = doc(db, "skills", id);
-  await setDoc(docRef, { ...skill, id, updatedAt: new Date().toISOString() }, { merge: true });
+  await setDoc(
+    docRef,
+    { ...skill, id, updatedAt: new Date().toISOString() },
+    { merge: true }
+  );
+  await logActivity(`Saved skill "${skill.name}" (${skill.category})`, actor);
 }
 
-export async function deleteSkill(id: string): Promise<void> {
+export async function deleteSkill(
+  id: string,
+  name?: string,
+  actor: string = "Admin"
+): Promise<void> {
   await deleteDoc(doc(db, "skills", id));
+  await logActivity(`Deleted skill "${name || id}"`, actor);
 }
 
 // Experience & Education
-export async function saveExperience(item: TimelineItem & { id?: string }): Promise<void> {
+export async function saveExperience(
+  item: TimelineItem & { id?: string },
+  actor: string = "Admin"
+): Promise<void> {
   const prefix = item.type === "education" ? "edu" : "exp";
   const id = item.id || `${prefix}-${Date.now()}`;
   const docRef = doc(db, "experience", id);
-  await setDoc(docRef, { ...item, id, updatedAt: new Date().toISOString() }, { merge: true });
+  await setDoc(
+    docRef,
+    { ...item, id, updatedAt: new Date().toISOString() },
+    { merge: true }
+  );
+  const typeLabel = item.type === "education" ? "Education item" : "Work Experience";
+  await logActivity(`Saved ${typeLabel} "${item.title}" at "${item.organization}"`, actor);
 }
 
-export async function deleteExperience(id: string): Promise<void> {
+export async function deleteExperience(
+  id: string,
+  title?: string,
+  actor: string = "Admin"
+): Promise<void> {
   await deleteDoc(doc(db, "experience", id));
+  await logActivity(`Deleted milestone "${title || id}"`, actor);
 }

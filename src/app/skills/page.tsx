@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getSkills, Skill } from '@/lib/db';
+import { getSkills, subscribeSkills, Skill } from '@/lib/db';
 import { Wrench, Sparkles, Loader2 } from 'lucide-react';
 
 const categories = ['All', 'Frontend', 'Backend', 'CMS & E-commerce', 'Tools & Cloud'] as const;
@@ -13,15 +13,12 @@ export default function SkillsPage() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   useEffect(() => {
-    async function loadSkills() {
-      try {
-        const data = await getSkills();
-        setSkillsList(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadSkills();
+    const unsubscribe = subscribeSkills((data) => {
+      setSkillsList(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const filteredSkills =

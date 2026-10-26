@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getProjects, Project } from '@/lib/db';
+import { getProjects, subscribeProjects, Project } from '@/lib/db';
 import { ExternalLink, Github, FolderGit2, Search, Loader2 } from 'lucide-react';
 
 export default function ProjectsPage() {
@@ -12,15 +12,12 @@ export default function ProjectsPage() {
   const [selectedTag, setSelectedTag] = useState<string>('All');
 
   useEffect(() => {
-    async function loadProjects() {
-      try {
-        const data = await getProjects();
-        setProjectsList(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadProjects();
+    const unsubscribe = subscribeProjects((data) => {
+      setProjectsList(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Collect all unique tags dynamically

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   authenticateAdmin,
   createAdminUser,
@@ -12,9 +12,24 @@ import {
   deleteSkill,
   saveExperience,
   deleteExperience,
+  getAuditLogs,
+  subscribeAuditLogs,
+  subscribeAdminUsers,
+  logActivity,
   AdminUser,
+  AuditLog,
 } from '@/lib/admin';
-import { getProjects, getSkills, getTimeline, Project, Skill, TimelineItem } from '@/lib/db';
+import {
+  getProjects,
+  getSkills,
+  getTimeline,
+  subscribeProjects,
+  subscribeSkills,
+  subscribeTimeline,
+  Project,
+  Skill,
+  TimelineItem,
+} from '@/lib/db';
 import {
   Shield,
   KeyRound,
@@ -32,6 +47,13 @@ import {
   CheckCircle,
   AlertCircle,
   ExternalLink,
+  Upload,
+  FileText,
+  Clock,
+  Activity,
+  FileUp,
+  Image as ImageIcon,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -45,7 +67,7 @@ export default function AdminPage() {
   const [loginLoading, setLoginLoading] = useState(false);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'projects' | 'skills' | 'experience' | 'users'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'skills' | 'experience' | 'users' | 'cv' | 'logs'>('projects');
 
   // Data states
   const [projects, setProjects] = useState<Project[]>([]);
@@ -53,6 +75,7 @@ export default function AdminPage() {
   const [experience, setExperience] = useState<TimelineItem[]>([]);
   const [education, setEducation] = useState<TimelineItem[]>([]);
   const [adminUsers, setAdminUsers] = useState<Omit<AdminUser, 'passwordHash'>[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
   // Feedback banner
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
@@ -60,14 +83,21 @@ export default function AdminPage() {
   // Modal / Editing states
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
   const [projectTagsInput, setProjectTagsInput] = useState('');
+  const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [editingSkill, setEditingSkill] = useState<Partial<Skill> | null>(null);
   const [editingTimeline, setEditingTimeline] = useState<Partial<TimelineItem & { id?: string }> | null>(null);
+
+  // CV Upload state
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvUploading, setCvUploading] = useState(false);
 
   // New user form state
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newName, setNewName] = useState('');
   const [creatingUser, setCreatingUser] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
@@ -89,23 +119,42 @@ export default function AdminPage() {
 
   // Refresh current data
   const refreshData = async () => {
-    const [p, s, t, u] = await Promise.all([
+    const [p, s, t, u, l] = await Promise.all([
       getProjects(),
       getSkills(),
       getTimeline(),
       getAdminUsers(),
+      getAuditLogs(),
     ]);
     setProjects(p);
     setSkills(s);
     setExperience(t.experience);
     setEducation(t.education);
     setAdminUsers(u);
+    setAuditLogs(l);
   };
 
+  // Real-time synchronization: Any addition, update, or deletion reflects instantly without page refresh
   useEffect(() => {
-    if (currentUser) {
-      refreshData();
-    }
+    if (!currentUser) return;
+
+    // Attach listeners
+    const unsubProjects = subscribeProjects((data) => setProjects(data));
+    const unsubSkills = subscribeSkills((data) => setSkills(data));
+    const unsubTimeline = subscribeTimeline((data) => {
+      setExperience(data.experience);
+      setEducation(data.education);
+    });
+    const unsubUsers = subscribeAdminUsers((data) => setAdminUsers(data));
+    const unsubLogs = subscribeAuditLogs((data) => setAuditLogs(data));
+
+    return () => {
+      unsubProjects();
+      unsubSkills();
+      unsubTimeline();
+      unsubUsers();
+      unsubLogs();
+    };
   }, [currentUser]);
 
   // Handle Login
@@ -126,6 +175,7 @@ export default function AdminPage() {
         setCurrentUser(sanitized);
         localStorage.setItem('portfolio_admin_user', JSON.stringify(sanitized));
         showToast(`Welcome back, ${user.name}!`);
+        await logActivity(`Logged into admin control panel`, user.name);
       } else {
         setLoginError('Invalid username or password.');
       }
@@ -136,38 +186,118 @@ export default function AdminPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (currentUser) {
+      await logActivity(`Logged out of admin panel`, currentUser.name);
+    }
     setCurrentUser(null);
     localStorage.removeItem('portfolio_admin_user');
   };
 
+  // --- IMAGE UPLOAD HANDLER ---
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageUploadLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'image');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to upload image');
+
+      setEditingProject((prev) => ({
+        ...prev,
+        image: data.url,
+      }));
+      showToast('Image uploaded successfully!');
+    } catch (err: any) {
+      showToast(err.message || 'Image upload failed', 'error');
+    } finally {
+      setImageUploadLoading(false);
+    }
+  };
+
+  // --- CV UPLOAD HANDLER ---
+  const handleCvUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!cvFile) return;
+
+    setCvUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', cvFile);
+      formData.append('type', 'cv');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update CV');
+
+      await logActivity(
+        `Updated CV file (${cvFile.name})`,
+        currentUser?.name || 'Admin'
+      );
+
+      showToast('CV updated successfully!');
+      setCvFile(null);
+      refreshData();
+    } catch (err: any) {
+      showToast(err.message || 'Failed to upload CV', 'error');
+    } finally {
+      setCvUploading(false);
+    }
+  };
+
   // --- PROJECT CRUD ---
+  const [projectSaving, setProjectSaving] = useState(false);
+
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingProject?.title || !editingProject.description) return;
+    if (!editingProject?.title || !editingProject.description) {
+      showToast('Please fill in both title and description', 'error');
+      return;
+    }
+    setProjectSaving(true);
     try {
       const parsedTags = projectTagsInput
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
 
-      await saveProject({
-        ...editingProject,
-        tags: parsedTags,
-      });
+      await saveProject(
+        {
+          ...editingProject,
+          tags: parsedTags,
+        },
+        currentUser?.name || 'Admin'
+      );
       showToast('Project saved successfully!');
       setEditingProject(null);
       setProjectTagsInput('');
-      refreshData();
+      await refreshData();
     } catch (err: any) {
-      showToast(err.message || 'Error saving project', 'error');
+      console.error('Error saving project to Firestore:', err);
+      showToast(err.message || 'Error saving project to Firestore', 'error');
+    } finally {
+      setProjectSaving(false);
     }
   };
 
-  const handleDeleteProject = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+  const handleDeleteProject = async (proj: Project) => {
+    if (!confirm(`Are you sure you want to delete "${proj.title}"?`)) return;
     try {
-      await deleteProject(id);
+      await deleteProject(proj.id, proj.title, currentUser?.name || 'Admin');
       showToast('Project deleted');
       refreshData();
     } catch (err: any) {
@@ -180,7 +310,7 @@ export default function AdminPage() {
     e.preventDefault();
     if (!editingSkill?.name || !editingSkill.category) return;
     try {
-      await saveSkill(editingSkill as Skill);
+      await saveSkill(editingSkill as Skill, currentUser?.name || 'Admin');
       showToast('Skill saved!');
       setEditingSkill(null);
       refreshData();
@@ -189,10 +319,10 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteSkill = async (id: string) => {
-    if (!confirm('Delete this skill?')) return;
+  const handleDeleteSkill = async (id: string, name: string) => {
+    if (!confirm(`Delete skill "${name}"?`)) return;
     try {
-      await deleteSkill(id);
+      await deleteSkill(id, name, currentUser?.name || 'Admin');
       showToast('Skill deleted');
       refreshData();
     } catch (err) {
@@ -205,7 +335,7 @@ export default function AdminPage() {
     e.preventDefault();
     if (!editingTimeline?.title || !editingTimeline?.organization) return;
     try {
-      await saveExperience(editingTimeline as TimelineItem);
+      await saveExperience(editingTimeline as TimelineItem, currentUser?.name || 'Admin');
       showToast('Timeline item saved!');
       setEditingTimeline(null);
       refreshData();
@@ -214,10 +344,10 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteTimeline = async (id: string) => {
-    if (!confirm('Delete this timeline record?')) return;
+  const handleDeleteTimeline = async (id: string, title: string) => {
+    if (!confirm(`Delete milestone "${title}"?`)) return;
     try {
-      await deleteExperience(id);
+      await deleteExperience(id, title, currentUser?.name || 'Admin');
       showToast('Item deleted');
       refreshData();
     } catch (err) {
@@ -232,7 +362,11 @@ export default function AdminPage() {
     setCreatingUser(true);
     try {
       await createAdminUser(newUsername, newPassword, newName);
-      showToast(`User ${newUsername} created successfully!`);
+      await logActivity(
+        `Created new admin user @${newUsername} (${newName})`,
+        currentUser?.name || 'Admin'
+      );
+      showToast(`User @${newUsername} created successfully!`);
       setNewUsername('');
       setNewPassword('');
       setNewName('');
@@ -394,6 +528,30 @@ export default function AdminPage() {
         </button>
 
         <button
+          onClick={() => setActiveTab('cv')}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
+            activeTab === 'cv'
+              ? 'bg-[#1cdce8] text-black shadow-lg shadow-[#1cdce8]/20'
+              : 'bg-white/5 text-gray-400 hover:text-white border border-white/5'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          <span>Update CV (Resume)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('logs')}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
+            activeTab === 'logs'
+              ? 'bg-[#1cdce8] text-black shadow-lg shadow-[#1cdce8]/20'
+              : 'bg-white/5 text-gray-400 hover:text-white border border-white/5'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          <span>Activity Logs ({auditLogs.length})</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('users')}
           className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
             activeTab === 'users'
@@ -447,7 +605,7 @@ export default function AdminPage() {
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleDeleteProject(proj.id)}
+                        onClick={() => handleDeleteProject(proj)}
                         className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-gray-300 hover:text-red-400"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -505,7 +663,7 @@ export default function AdminPage() {
             {skills.map((skill) => (
               <div key={skill.name} className="p-4 rounded-xl glow-card text-center relative group">
                 <button
-                  onClick={() => handleDeleteSkill(skill.name.toLowerCase().replace(/[^a-z0-9]/g, '-'))}
+                  onClick={() => handleDeleteSkill(skill.name.toLowerCase().replace(/[^a-z0-9]/g, '-'), skill.name)}
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500/40 transition-all"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -551,6 +709,12 @@ export default function AdminPage() {
                     <p className="text-xs text-gray-400">{item.organization} • {item.period}</p>
                     <p className="text-xs text-gray-300 mt-2">{item.description}</p>
                   </div>
+                  <button
+                    onClick={() => handleDeleteTimeline(item.organization.toLowerCase().replace(/[^a-z0-9]/g, '-'), item.title)}
+                    className="p-1.5 self-start rounded-lg bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -565,6 +729,12 @@ export default function AdminPage() {
                     <p className="text-xs text-gray-400">{item.organization} • {item.period}</p>
                     <p className="text-xs text-gray-300 mt-2">{item.description}</p>
                   </div>
+                  <button
+                    onClick={() => handleDeleteTimeline(item.organization.toLowerCase().replace(/[^a-z0-9]/g, '-'), item.title)}
+                    className="p-1.5 self-start rounded-lg bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -572,7 +742,131 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* TAB 4: ADMIN USERS */}
+      {/* TAB 4: UPDATE CV FILE */}
+      {activeTab === 'cv' && (
+        <div className="max-w-2xl mx-auto p-8 rounded-2xl glow-card border border-white/10 space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#1cdce8]" />
+              Update CV / Resume File
+            </h2>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Upload an updated PDF of your resume. This will overwrite the live public download link
+              (<span className="text-[#1cdce8] font-mono">/cv-Prajjwal-Shrimal.pdf</span>) across your About and Contact pages.
+            </p>
+          </div>
+
+          <form onSubmit={handleCvUpload} className="space-y-5">
+            <div className="p-8 border-2 border-dashed border-white/15 rounded-2xl flex flex-col items-center justify-center text-center hover:border-[#1cdce8]/50 transition-colors bg-white/[0.02]">
+              <FileUp className="w-12 h-12 text-[#1cdce8] mb-3" />
+              <label htmlFor="cv-upload-input" className="cursor-pointer">
+                <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold inline-block transition-all">
+                  Choose New PDF File
+                </span>
+                <input
+                  id="cv-upload-input"
+                  type="file"
+                  accept=".pdf"
+                  required
+                  onChange={(e) => setCvFile(e.target.files?.[0] || null)}
+                  className="hidden"
+                />
+              </label>
+              {cvFile ? (
+                <p className="text-xs text-[#00D763] font-medium mt-3">
+                  Selected: {cvFile.name} ({(cvFile.size / 1024).toFixed(1)} KB)
+                </p>
+              ) : (
+                <p className="text-[11px] text-gray-500 mt-3">Only PDF files are accepted.</p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-4 pt-2">
+              <a
+                href="/cv-Prajjwal-Shrimal.pdf"
+                target="_blank"
+                className="text-xs text-gray-400 hover:text-white underline flex items-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5" /> View Current Live CV
+              </a>
+
+              <button
+                type="submit"
+                disabled={!cvFile || cvUploading}
+                className="px-6 py-2.5 rounded-xl bg-[#1cdce8] hover:bg-[#1cdce8]/90 text-black text-xs font-bold transition-all disabled:opacity-40 flex items-center gap-2"
+              >
+                {cvUploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Uploading & Updating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    <span>Publish Updated CV</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* TAB 5: ACTIVITY LOGS */}
+      {activeTab === 'logs' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-[#1cdce8]" />
+                Audit & Activity Logs
+              </h2>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Detailed timeline of updates, creations, uploads, and deletions performed in the admin panel.
+              </p>
+            </div>
+            <button
+              onClick={refreshData}
+              className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-gray-300 border border-white/10 transition-all"
+            >
+              Refresh Logs
+            </button>
+          </div>
+
+          <div className="p-6 rounded-2xl glow-card border border-white/10">
+            {auditLogs.length === 0 ? (
+              <div className="text-center py-12 text-gray-500 text-xs">
+                No activity logs recorded yet.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {auditLogs.map((log) => (
+                  <div
+                    key={log.id}
+                    className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <span className="w-2 h-2 rounded-full bg-[#1cdce8] mt-1.5 shrink-0" />
+                      <div>
+                        <p className="text-white font-medium">{log.message}</p>
+                        <p className="text-[11px] text-gray-400">
+                          Performed by: <span className="text-[#1cdce8]">{log.actor}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-gray-400 text-[11px] shrink-0 font-mono">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{log.formattedDate}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 6: ADMIN USERS */}
       {activeTab === 'users' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Create User Form */}
@@ -658,7 +952,7 @@ export default function AdminPage() {
                       <button
                         onClick={async () => {
                           if (confirm(`Delete admin user @${u.username}?`)) {
-                            await deleteAdminUser(u.id);
+                            await deleteAdminUser(u.id, currentUser?.name || 'Admin');
                             showToast(`Deleted @${u.username}`);
                             refreshData();
                           }
@@ -676,7 +970,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* --- MODAL FOR EDITING PROJECT --- */}
+      {/* --- MODAL FOR EDITING PROJECT (WITH FILE UPLOAD) --- */}
       {editingProject && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-[#1a1b2e] border border-white/15 rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -689,7 +983,7 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSaveProject} className="space-y-3 text-xs">
+            <form onSubmit={handleSaveProject} className="space-y-4 text-xs">
               <div>
                 <label className="block text-gray-300 mb-1">Project Title</label>
                 <input
@@ -698,6 +992,7 @@ export default function AdminPage() {
                   value={editingProject.title || ''}
                   onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
                   className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
+                  placeholder="e.g. My Next.js Web App"
                 />
               </div>
 
@@ -709,18 +1004,51 @@ export default function AdminPage() {
                   value={editingProject.description || ''}
                   onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
                   className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
+                  placeholder="Describe the platform, role, and key features..."
                 />
               </div>
 
-              <div>
-                <label className="block text-gray-300 mb-1">Image Path / URL</label>
-                <input
-                  type="text"
-                  value={editingProject.image || ''}
-                  onChange={(e) => setEditingProject({ ...editingProject, image: e.target.value })}
-                  className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
-                  placeholder="/astrologer.jpg"
-                />
+              {/* PROJECT IMAGE (URL OR FILE UPLOAD) */}
+              <div className="space-y-2 p-3.5 rounded-xl bg-white/[0.03] border border-white/10">
+                <label className="block text-gray-300 font-semibold flex items-center gap-1.5">
+                  <ImageIcon className="w-4 h-4 text-[#1cdce8]" />
+                  <span>Project Image</span>
+                </label>
+
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingProject.image || ''}
+                    onChange={(e) => setEditingProject({ ...editingProject, image: e.target.value })}
+                    className="flex-1 p-2 bg-white/5 border border-white/10 rounded-xl text-white text-xs"
+                    placeholder="/astrologer.jpg or uploaded URL"
+                  />
+                  <label
+                    htmlFor="project-img-upload"
+                    className="cursor-pointer px-3 py-2 rounded-xl bg-[#1cdce8]/10 hover:bg-[#1cdce8] text-[#1cdce8] hover:text-black font-semibold text-xs transition-all flex items-center gap-1.5 shrink-0"
+                  >
+                    {imageUploadLoading ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Upload className="w-3.5 h-3.5" />
+                    )}
+                    <span>{imageUploadLoading ? 'Uploading...' : 'Upload File'}</span>
+                    <input
+                      id="project-img-upload"
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleImageFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {editingProject.image && (
+                  <p className="text-[10px] text-gray-400 truncate">
+                    Preview link: <span className="text-[#1cdce8]">{editingProject.image}</span>
+                  </p>
+                )}
               </div>
 
               <div>
@@ -742,6 +1070,7 @@ export default function AdminPage() {
                     value={editingProject.link || ''}
                     onChange={(e) => setEditingProject({ ...editingProject, link: e.target.value })}
                     className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
+                    placeholder="https://..."
                   />
                 </div>
                 <div>
@@ -751,6 +1080,7 @@ export default function AdminPage() {
                     value={editingProject.github || ''}
                     onChange={(e) => setEditingProject({ ...editingProject, github: e.target.value })}
                     className="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white"
+                    placeholder="https://github.com/..."
                   />
                 </div>
               </div>
@@ -765,9 +1095,17 @@ export default function AdminPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#1cdce8] text-black font-semibold hover:bg-[#1cdce8]/90"
+                  disabled={projectSaving}
+                  className="px-4 py-2 rounded-xl bg-[#1cdce8] text-black font-semibold hover:bg-[#1cdce8]/90 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  Save Project
+                  {projectSaving ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Saving to Database...</span>
+                    </>
+                  ) : (
+                    <span>Save Project</span>
+                  )}
                 </button>
               </div>
             </form>

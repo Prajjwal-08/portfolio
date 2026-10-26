@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getTimeline, TimelineItem } from '@/lib/db';
+import { getTimeline, subscribeTimeline, TimelineItem } from '@/lib/db';
 import { Download, GraduationCap, Briefcase, Calendar, ArrowRight, UserCheck, Loader2 } from 'lucide-react';
 
 export default function AboutPage() {
@@ -13,15 +13,12 @@ export default function AboutPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadTimeline() {
-      try {
-        const data = await getTimeline();
-        setTimeline(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadTimeline();
+    const unsubscribe = subscribeTimeline((data) => {
+      setTimeline(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
