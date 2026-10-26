@@ -1,38 +1,85 @@
-# create-svelte
+# Prajjwal Shrimal — Portfolio
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A modern, responsive developer portfolio showcasing projects, experience, skills, and contact information. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, and styled with **Tailwind CSS** and **Framer Motion**.
 
-## Creating a project
+---
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🚀 Tech Stack
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Library:** [React 19](https://react.dev/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) & PostCSS
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Backend / Services:** Firebase (contact/analytics integration)
 
-# create a new project in my-app
-npm create svelte@latest my-app
+---
+
+## 📁 Project Structure
+
+```text
+portfolio/
+├── public/              # Static assets (images, icons, resumes)
+├── src/
+│   ├── app/             # Next.js App Router (pages, layout, globals.css)
+│   ├── components/      # Reusable UI components (Navbar, Footer, Project cards, etc.)
+│   ├── data/            # Static data sets (projects, experience, skills)
+│   └── lib/             # Utility functions & helper modules
+├── next.config.mjs      # Next.js configuration
+├── tailwind.config.ts   # Tailwind CSS design system configuration
+├── tsconfig.json        # TypeScript configuration
+└── package.json         # Project metadata and dependencies
 ```
 
-## Developing
+---
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## 🛠️ Getting Started
+
+### Prerequisites
+
+Ensure you have **Node.js 18.17+** (or newer) installed.
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Prajjwal-08/portfolio.git
+cd portfolio
+npm install
+```
+
+### Running Locally
+
+Run the development server:
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the portfolio.
 
-To create a production version of your app:
+---
 
-```bash
-npm run build
-```
+## 📜 Available Scripts
 
-You can preview the production build with `npm run preview`.
+- `npm run dev` — Starts the development server at `http://localhost:3000`
+- `npm run build` — Compiles and builds the production application
+- `npm run start` — Runs the compiled production build
+- `npm run lint` — Runs ESLint checks across the codebase
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+---
+
+## 🌐 Deployment
+
+The easiest way to deploy this Next.js app is using the [Vercel Platform](https://vercel.com/new).
+
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+## 📬 Contact
+
+- **Name:** Prajjwal Shrimal
+- **GitHub:** [@Prajjwal-08](https://github.com/Prajjwal-08)
