@@ -1,8 +1,29 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { education, experience } from '@/data/experience';
-import { Download, GraduationCap, Briefcase, Calendar, ArrowRight, UserCheck } from 'lucide-react';
+import { getTimeline, TimelineItem } from '@/lib/db';
+import { Download, GraduationCap, Briefcase, Calendar, ArrowRight, UserCheck, Loader2 } from 'lucide-react';
 
 export default function AboutPage() {
+  const [timeline, setTimeline] = useState<{
+    experience: TimelineItem[];
+    education: TimelineItem[];
+  }>({ experience: [], education: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadTimeline() {
+      try {
+        const data = await getTimeline();
+        setTimeline(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTimeline();
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
       {/* Intro Section */}
@@ -82,70 +103,84 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Experience & Education Timelines */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Experience Column */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#1cdce8]/10 text-[#1cdce8] border border-[#1cdce8]/20">
-              <Briefcase className="w-6 h-6" />
+      {/* Loading indicator */}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <Loader2 className="w-8 h-8 text-[#1cdce8] animate-spin" />
+          <p className="text-gray-400 text-sm">Loading timeline history...</p>
+        </div>
+      ) : (
+        /* Experience & Education Timelines */
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Experience Column */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-[#1cdce8]/10 text-[#1cdce8] border border-[#1cdce8]/20">
+                <Briefcase className="w-6 h-6" />
+              </div>
+              <h2 className="text-2xl font-bold text-white">Work Experience</h2>
             </div>
-            <h2 className="text-2xl font-bold text-white">Work Experience</h2>
+
+            <div className="space-y-6 relative pl-6 border-l-2 border-white/10">
+              {timeline.experience.map((item, idx) => (
+                <div key={idx} className="relative group">
+                  {/* Dot */}
+                  <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#1cdce8] ring-4 ring-[#131420] transition-transform group-hover:scale-125" />
+
+                  <div className="p-6 rounded-2xl glow-card space-y-2 transition-all">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-lg font-bold text-white group-hover:text-[#1cdce8] transition-colors">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 text-xs text-[#1cdce8] bg-[#1cdce8]/10 px-2.5 py-1 rounded-full">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>{item.period}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm font-semibold text-gray-400">{item.organization}</p>
+                    <p className="text-sm text-gray-300 leading-relaxed pt-1">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="space-y-6 relative pl-6 border-l-2 border-white/10">
-            {experience.map((item, idx) => (
-              <div key={idx} className="relative group">
-                {/* Dot */}
-                <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#1cdce8] ring-4 ring-[#131420] transition-transform group-hover:scale-125" />
-
-                <div className="p-5 rounded-xl glow-card space-y-2">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                    <span className="inline-flex items-center gap-1 text-xs text-[#1cdce8] bg-[#1cdce8]/10 px-2.5 py-1 rounded-full border border-[#1cdce8]/20">
-                      <Calendar className="w-3 h-3" />
-                      {item.period}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium text-[#bb77ed]">{item.organization}</p>
-                  <p className="text-sm text-gray-300 leading-relaxed">{item.description}</p>
-                </div>
+          {/* Education Column */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-[#bb77ed]/10 text-[#bb77ed] border border-[#bb77ed]/20">
+                <GraduationCap className="w-6 h-6" />
               </div>
-            ))}
+              <h2 className="text-2xl font-bold text-white">Education</h2>
+            </div>
+
+            <div className="space-y-6 relative pl-6 border-l-2 border-white/10">
+              {timeline.education.map((item, idx) => (
+                <div key={idx} className="relative group">
+                  {/* Dot */}
+                  <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#bb77ed] ring-4 ring-[#131420] transition-transform group-hover:scale-125" />
+
+                  <div className="p-6 rounded-2xl glow-card space-y-2 transition-all">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-lg font-bold text-white group-hover:text-[#bb77ed] transition-colors">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 text-xs text-[#bb77ed] bg-[#bb77ed]/10 px-2.5 py-1 rounded-full">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>{item.period}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm font-semibold text-gray-400">{item.organization}</p>
+                    <p className="text-sm text-gray-300 leading-relaxed pt-1">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Education Column */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#bb77ed]/10 text-[#bb77ed] border border-[#bb77ed]/20">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-            <h2 className="text-2xl font-bold text-white">Education & Qualifications</h2>
-          </div>
-
-          <div className="space-y-6 relative pl-6 border-l-2 border-white/10">
-            {education.map((item, idx) => (
-              <div key={idx} className="relative group">
-                {/* Dot */}
-                <div className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#bb77ed] ring-4 ring-[#131420] transition-transform group-hover:scale-125" />
-
-                <div className="p-5 rounded-xl glow-card space-y-2">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                    <span className="inline-flex items-center gap-1 text-xs text-[#bb77ed] bg-[#bb77ed]/10 px-2.5 py-1 rounded-full border border-[#bb77ed]/20">
-                      <Calendar className="w-3 h-3" />
-                      {item.period}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium text-gray-300">{item.organization}</p>
-                  <p className="text-sm text-gray-400 leading-relaxed">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

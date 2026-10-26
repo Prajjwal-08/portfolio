@@ -1,19 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { skills } from '@/data/skills';
-import { Wrench, Sparkles, Code2, Database, ShoppingBag, Cpu } from 'lucide-react';
+import { getSkills, Skill } from '@/lib/db';
+import { Wrench, Sparkles, Loader2 } from 'lucide-react';
 
 const categories = ['All', 'Frontend', 'Backend', 'CMS & E-commerce', 'Tools & Cloud'] as const;
 
 export default function SkillsPage() {
+  const [skillsList, setSkillsList] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>('All');
+
+  useEffect(() => {
+    async function loadSkills() {
+      try {
+        const data = await getSkills();
+        setSkillsList(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSkills();
+  }, []);
 
   const filteredSkills =
     activeCategory === 'All'
-      ? skills
-      : skills.filter((skill) => skill.category === activeCategory);
+      ? skillsList
+      : skillsList.filter((skill) => skill.category === activeCategory);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -71,39 +85,47 @@ export default function SkillsPage() {
         </div>
       </div>
 
-      {/* Skills Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
-        {filteredSkills.map((skill, index) => (
-          <div
-            key={skill.name}
-            className="group relative p-5 rounded-2xl glow-card flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-105"
-          >
-            {/* Ambient card glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
+      {/* Loading state */}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <Loader2 className="w-8 h-8 text-[#1cdce8] animate-spin" />
+          <p className="text-gray-400 text-sm">Loading skills from database...</p>
+        </div>
+      ) : (
+        /* Skills Grid */
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+          {filteredSkills.map((skill) => (
+            <div
+              key={skill.name}
+              className="group relative p-5 rounded-2xl glow-card flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-105"
+            >
+              {/* Ambient card glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
 
-            {/* Icon Container */}
-            <div className="relative w-16 h-16 mb-4 p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-[#1cdce8]/50 group-hover:shadow-[0_0_15px_rgba(28,220,232,0.2)] transition-all">
-              <Image
-                src={skill.icon}
-                alt={skill.name}
-                width={40}
-                height={40}
-                className="object-contain transition-transform duration-300 group-hover:scale-110"
-              />
+              {/* Icon Container */}
+              <div className="relative w-16 h-16 mb-4 p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-[#1cdce8]/50 group-hover:shadow-[0_0_15px_rgba(28,220,232,0.2)] transition-all">
+                <Image
+                  src={skill.icon}
+                  alt={skill.name}
+                  width={40}
+                  height={40}
+                  className="object-contain transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+
+              {/* Skill Name */}
+              <h2 className="text-sm font-semibold text-white group-hover:text-[#1cdce8] transition-colors">
+                {skill.name}
+              </h2>
+
+              {/* Category Pill */}
+              <span className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">
+                {skill.category}
+              </span>
             </div>
-
-            {/* Skill Name */}
-            <h2 className="text-sm font-semibold text-white group-hover:text-[#1cdce8] transition-colors">
-              {skill.name}
-            </h2>
-
-            {/* Category Pill */}
-            <span className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">
-              {skill.category}
-            </span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Highlights summary */}
       <div className="mt-16 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#1a1b2e] to-[#131420] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
